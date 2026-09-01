@@ -222,6 +222,11 @@
     border-color:#6b4e10;
     box-shadow: 0 0 0 1px rgba(243,178,58,0.18) inset, 0 6px 24px -10px rgba(243,178,58,0.35);
   }
+  .card.dimmed{
+    filter:grayscale(0.9);
+    opacity:0.55;
+  }
+  .card.dimmed .status-pill{ opacity:0.9; }
 
   .avatar{
     width:58px; height:58px; border-radius:50%;
@@ -498,7 +503,7 @@
 
   <footer>
     Data jadwal &amp; status diambil dari perangkat/browser yang sama dengan halaman Generator Jadwal Dinas.<br>
-    Lencana radiasi berpendar menandakan petugas yang sedang bertugas hari ini.
+    Lencana radiasi berpendar menandakan petugas yang sedang berada dalam jam dinasnya saat ini; petugas lain ditampilkan abu-abu.
   </footer>
 
   <!-- Modal QR -->
@@ -637,6 +642,28 @@
     return minutes >= (12 * 60) && minutes < (15 * 60);
   }
 
+  // ===== Rentang jam tiap shift =====
+  // Ubah di sini jika jam dinas RS berbeda.
+  const SHIFT_RANGES = {
+    P: { start: 7 * 60,  end: 14 * 60 },       // Pagi  07.00–14.00
+    S: { start: 14 * 60, end: 21 * 60 },       // Sore  14.00–21.00
+    M: { start: 21 * 60, end: 7 * 60 }         // Malam 21.00–07.00 (lewat tengah malam)
+  };
+
+  function getCurrentShiftCode() {
+    const now = new Date();
+    const minutes = now.getHours() * 60 + now.getMinutes();
+    for (const [code, range] of Object.entries(SHIFT_RANGES)) {
+      if (range.start <= range.end) {
+        if (minutes >= range.start && minutes < range.end) return code;
+      } else {
+        // rentang yang melewati tengah malam (Malam)
+        if (minutes >= range.start || minutes < range.end) return code;
+      }
+    }
+    return null;
+  }
+
   function renderDoctor() {
     const slot = document.getElementById('doctor-slot');
     const onDuty = isDoctorOnDutyNow();
@@ -681,24 +708,29 @@
 
     const cardsWrap = document.createElement('div');
     cardsWrap.className = 'cards';
+    const currentShift = getCurrentShiftCode();
 
     staffDirectory.forEach(person => {
       const shift = schedule.shiftsByName[person.name] || '-';
       const isLibur = shift === 'L';
-      const isOnDutyToday = !isLibur; // bertugas hari ini = tidak libur
+      const isOnDutyNow = !isLibur && shift === currentShift; // sedang dalam jam dinasnya sekarang
       const isOut = !!(statusData[person.name] && statusData[person.name].keluar);
 
       let statusClass = 'status-off', statusText = 'Libur';
-      if (!isLibur) {
+      if (isLibur) {
+        statusClass = 'status-off'; statusText = 'Libur';
+      } else if (!isOnDutyNow) {
+        statusClass = 'status-off'; statusText = 'Belum Waktu Dinas';
+      } else {
         statusClass = isOut ? 'status-out' : 'status-duty';
         statusText = isOut ? 'Sedang Keluar' : 'Di Tempat';
       }
 
       const link = waLink(person.phone, person.name);
       const card = document.createElement('div');
-      card.className = 'card' + (isOnDutyToday ? ' on-duty' : '');
+      card.className = 'card' + (isOnDutyNow ? ' on-duty' : ' dimmed');
       card.innerHTML = `
-        ${isOnDutyToday ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
+        ${isOnDutyNow ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
         <span class="shift-tag shift-${shift}">${shiftLabel[shift] || shift}</span>
         <div class="avatar">${person.photo ? `<img src="${person.photo}" alt="${person.name}">` : personIcon()}</div>
         <p class="name">${person.name}</p>
