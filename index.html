@@ -138,116 +138,89 @@
     100%{ box-shadow:0 0 0 0 rgba(243,178,58,0.0); }
   }
   .radiation-badge{
-    position:absolute; top:-11px; right:14px; width:34px; height:34px;
+    position:absolute; top:-9px; right:10px; width:26px; height:26px;
     border-radius:50%; background:radial-gradient(circle at 35% 30%, #1c1704, #000);
     display:flex; align-items:center; justify-content:center;
     border:1px solid #6b4e10;
     animation: ring-pulse 2.2s ease-out infinite;
   }
-  .radiation-badge svg{ width:20px; height:20px; color:var(--amber); animation: pulse-glow 2.2s ease-in-out infinite; }
+  .radiation-badge svg{ width:15px; height:15px; color:var(--amber); animation: pulse-glow 2.2s ease-in-out infinite; }
 
-  /* ===== Doctor spotlight card ===== */
-  .doctor-card{
+  /* ===== Doctor compact row ===== */
+  .doctor-row{
     position:relative;
-    border-radius:24px;
-    padding:1.5px;
-    background:linear-gradient(135deg, var(--amber), #6b4e10 40%, var(--bg-2) 70%);
-  }
-  .doctor-card-inner{
-    border-radius:22.5px;
+    display:flex; align-items:center; gap:12px;
     background:linear-gradient(160deg, #16242C 0%, #0E1B22 100%);
-    padding:22px 20px 20px;
-    display:flex; flex-direction:column; align-items:center; text-align:center;
-    position:relative; overflow:hidden;
+    border:1px solid var(--line); border-radius:16px;
+    padding:14px 16px;
   }
-  .doctor-card-inner::before{
-    content:""; position:absolute; inset:0;
-    background: radial-gradient(circle at 50% -10%, rgba(243,178,58,0.16), transparent 55%);
-    pointer-events:none;
+  .doctor-row.on-duty{
+    border-color:#6b4e10;
+    box-shadow: 0 0 0 1px rgba(243,178,58,0.16) inset;
   }
-  .doctor-photo{
-    width:92px; height:92px; border-radius:50%; margin-bottom:14px;
+  .doctor-photo-sm{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
     background: radial-gradient(circle at 32% 28%, #2C4C4A, #123028 70%);
     border:2px solid var(--amber);
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 0 0 5px rgba(243,178,58,0.10);
-    position:relative; z-index:1;
+    overflow:hidden;
   }
-  .doctor-photo img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
-  .doctor-photo svg{ width:44px; height:44px; color:var(--amber-glow); }
+  .doctor-photo-sm img{ width:100%; height:100%; object-fit:cover; }
+  .doctor-photo-sm svg{ width:24px; height:24px; color:var(--amber-glow); }
+  .doctor-info{ flex:1; min-width:0; }
+  .doctor-info .dname{
+    font-family:'Fraunces', serif; font-weight:600; font-size:0.98rem; margin:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .doctor-info .dmeta{
+    font-size:0.74rem; color:#9DB3AF; margin:2px 0 0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .doctor-info .dmeta b{ color:var(--cyan); font-weight:600; }
+  .doctor-row .status-pill{ flex-shrink:0; margin:0; }
 
-  .doctor-name{
-    font-family:'Fraunces', serif; font-weight:700; font-size:1.28rem;
-    margin:0 0 4px; position:relative; z-index:1;
+  /* ===== Staff compact list ===== */
+  .staff-list{
+    display:flex; flex-direction:column; gap:8px;
   }
-  .doctor-field{
-    font-size:0.82rem; color:var(--cyan); font-weight:600;
-    letter-spacing:0.02em; margin-bottom:16px; position:relative; z-index:1;
-  }
-  .doctor-meta{
-    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
-    position:relative; z-index:1; width:100%;
-  }
-  .meta-chip{
-    display:flex; align-items:center; gap:7px;
-    background:rgba(255,255,255,0.045); border:1px solid var(--line);
-    border-radius:12px; padding:9px 13px; font-size:0.78rem; color:#D9E7E4;
-    flex:1; min-width:130px; justify-content:center;
-  }
-  .meta-chip svg{ width:15px; height:15px; color:var(--amber); flex-shrink:0; }
-  .meta-chip b{ color:#fff; font-weight:600; }
-
-  .doctor-status-row{
-    margin-top:14px; position:relative; z-index:1;
-  }
-
-  /* ===== Staff cards ===== */
-  .cards{
-    display:grid; grid-template-columns:1fr; gap:14px;
-  }
-  @media (min-width:560px){
-    .cards{ grid-template-columns:1fr 1fr; }
-  }
-
-  .card{
+  .staff-row{
     position:relative;
+    display:flex; align-items:center; gap:11px;
     background:linear-gradient(160deg, #182B34 0%, #101E26 100%);
     border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    padding:20px 18px 18px;
-    color:var(--paper);
-    transition: border-color .2s ease;
+    border-radius:14px;
+    padding:10px 12px;
   }
-  .card.on-duty{
+  .staff-row.on-duty{
     border-color:#6b4e10;
-    box-shadow: 0 0 0 1px rgba(243,178,58,0.18) inset, 0 6px 24px -10px rgba(243,178,58,0.35);
+    box-shadow: 0 0 0 1px rgba(243,178,58,0.14) inset;
   }
-  .card.dimmed{
-    filter:grayscale(0.9);
-    opacity:0.55;
-  }
-  .card.dimmed .status-pill{ opacity:0.9; }
+  .staff-row.dimmed{ opacity:0.55; }
 
-  .avatar{
-    width:58px; height:58px; border-radius:50%;
+  .avatar-sm{
+    width:40px; height:40px; border-radius:50%; flex-shrink:0;
     background:linear-gradient(160deg, #223A3E, #142228);
     border:1px solid var(--line);
     display:flex; align-items:center; justify-content:center;
-    overflow:hidden; margin-bottom:12px;
+    overflow:hidden;
   }
-  .avatar img{ width:100%; height:100%; object-fit:cover; }
-  .avatar svg{ width:30px; height:30px; color:#5B7A78; }
+  .avatar-sm img{ width:100%; height:100%; object-fit:cover; }
+  .avatar-sm svg{ width:20px; height:20px; color:#5B7A78; }
 
-  .name{
-    font-family:'Fraunces', serif; font-weight:600; font-size:1.02rem;
-    line-height:1.25; margin:0 0 2px; padding-right:44px;
+  .staff-info{ flex:1; min-width:0; }
+  .staff-info .sname{
+    font-family:'Fraunces', serif; font-weight:600; font-size:0.88rem; margin:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .role{ font-size:0.76rem; color:#8FA6A2; margin-bottom:12px; }
+  .staff-info .srole-row{
+    display:flex; align-items:center; gap:6px; margin-top:3px; flex-wrap:wrap;
+  }
+  .staff-info .srole{ font-size:0.7rem; color:#8FA6A2; }
 
   .shift-tag{
-    position:absolute; top:16px; right:16px;
-    font-size:0.66rem; font-weight:700; letter-spacing:0.03em; color:#0C1B24;
-    padding:3px 9px; border-radius:999px;
+    flex-shrink:0;
+    font-size:0.62rem; font-weight:700; letter-spacing:0.03em; color:#0C1B24;
+    padding:3px 8px; border-radius:999px;
   }
   .shift-P{ background:#7FD9CF; }
   .shift-S{ background:#F3C765; }
@@ -255,11 +228,11 @@
   .shift-L{ background:#8A8578; color:#F4F1E8; }
 
   .status-pill{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:0.76rem; font-weight:600; padding:5px 11px;
-    border-radius:999px; margin-bottom:16px;
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:0.7rem; font-weight:600; padding:4px 9px;
+    border-radius:999px; flex-shrink:0;
   }
-  .status-pill .dot{ width:7px; height:7px; border-radius:50%; }
+  .status-pill .dot{ width:6px; height:6px; border-radius:50%; }
   .status-duty{ background:var(--duty-bg); color:var(--duty); }
   .status-duty .dot{ background:var(--duty); }
   .status-out{ background:var(--out-bg); color:var(--out); }
@@ -267,25 +240,13 @@
   .status-off{ background:var(--off-bg); color:var(--off); }
   .status-off .dot{ background:var(--off); }
 
-  .contact-row{
-    display:flex; align-items:center; gap:12px;
-    border-top:1px dashed var(--line); padding-top:14px;
-  }
-  .qr-box{
-    width:56px; height:56px; background:#fff; border-radius:8px;
-    padding:4px; flex-shrink:0; cursor:pointer;
-  }
-  .qr-box canvas, .qr-box img{ width:100% !important; height:100% !important; }
-
-  .contact-info{ flex:1; min-width:0; }
-  .contact-info small{ display:block; color:#7E9490; font-size:0.66rem; margin-bottom:3px; }
-  .wa-btn{
-    display:inline-flex; align-items:center; gap:6px;
+  .wa-icon-btn{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
     background:var(--duty); color:#0C1B24; text-decoration:none;
-    font-size:0.78rem; font-weight:700; padding:8px 12px; border-radius:9px;
-    width:100%; justify-content:center;
   }
-  .wa-btn:active{ background:#33a874; }
+  .wa-icon-btn:active{ background:#33a874; }
+  .wa-icon-btn svg{ width:17px; height:17px; }
 
   footer{
     max-width:640px; margin:26px auto 0; color:#5C6E72; font-size:0.72rem;
@@ -361,13 +322,20 @@
     display:flex; align-items:center; gap:16px; margin-top:22px;
     padding-top:20px; border-top:1px dashed var(--line);
   }
-  .wa-direct .qr-box{ width:88px; height:88px; cursor:pointer; }
+  .wa-direct .qr-box{ width:88px; height:88px; cursor:pointer; background:#fff; border-radius:8px; padding:4px; flex-shrink:0; }
+  .wa-direct .qr-box canvas, .wa-direct .qr-box img{ width:100% !important; height:100% !important; }
   .wa-direct-info{ flex:1; min-width:0; }
   .wa-direct-info small{ display:block; color:#7E9490; font-size:0.7rem; margin-bottom:4px; }
   .wa-number{
     font-family:'JetBrains Mono', monospace; font-size:1.02rem; font-weight:500;
     color:#fff; letter-spacing:0.3px; margin:0 0 8px;
   }
+  .wa-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--duty); color:#0C1B24; text-decoration:none;
+    font-size:0.78rem; font-weight:700; padding:8px 12px; border-radius:9px;
+  }
+  .wa-btn:active{ background:#33a874; }
 
   /* ===== Modal QR ===== */
   .modal-overlay{
@@ -423,9 +391,9 @@
     </div>
 
     <div class="quicknav">
+      <a href="#rontgen-request">🩻 Minta Ekspertise</a>
       <a href="#dokter">👨‍⚕️ Dokter Spesialis</a>
       <a href="#petugas">🧑‍⚕️ Petugas Jaga</a>
-      <a href="#rontgen-request">🩻 Minta Ekspertise</a>
       <button class="refresh-btn" onclick="renderBoard()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2M18 4v4h-4M6 20v-4h4"/></svg>
         Muat ulang
@@ -435,13 +403,7 @@
 
   <div class="wrap">
 
-    <div class="section-label" id="dokter"><span>Dokter Spesialis</span><span class="line"></span></div>
-    <div id="doctor-slot"></div>
-
-    <div class="section-label" id="petugas"><span>Petugas Jaga Hari Ini</span><span class="line"></span></div>
-    <div id="board-body"></div>
-
-    <div class="section-label" id="rontgen-request"><span>Permintaan Ekspertise</span><span class="line"></span></div>
+    <div class="section-label" id="rontgen-request" style="margin-top:6px;"><span>Permintaan Ekspertise</span><span class="line"></span></div>
     <div class="request-card">
       <p class="request-title">Untuk meminta expertise rontgen panoramic dan rontgen, mohon hubungi wa di bawah</p>
       <p class="request-sub">Isi form berikut, lalu salin teksnya atau kirim langsung ke WhatsApp.</p>
@@ -498,6 +460,12 @@
         </div>
       </div>
     </div>
+
+    <div class="section-label" id="dokter"><span>Dokter Spesialis</span><span class="line"></span></div>
+    <div id="doctor-slot"></div>
+
+    <div class="section-label" id="petugas"><span>Petugas Jaga Hari Ini</span><span class="line"></span></div>
+    <div id="board-body"></div>
 
   </div>
 
@@ -560,12 +528,6 @@
       <path d="M12 12 L4.64 16.25 A8.5 8.5 0 0 1 4.64 7.75 Z" fill="currentColor"/>
       <path d="M12 12 L19.36 16.25 A8.5 8.5 0 0 1 12 20.5 A8.5 8.5 0 0 1 4.64 16.25 Z" fill="currentColor"/>
     </svg>`;
-  }
-  function clockIcon(){
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>`;
-  }
-  function stethoIcon(){
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v6a5 5 0 0 0 10 0V4"/><path d="M19 10v2a7 7 0 0 1-14 0"/><circle cx="19" cy="8" r="2"/></svg>`;
   }
 
   // ===== Konfigurasi Backend (Google Apps Script Web App) =====
@@ -669,22 +631,16 @@
     const slot = document.getElementById('doctor-slot');
     const onDuty = isDoctorOnDutyNow();
     slot.innerHTML = `
-      <div class="doctor-card">
-        <div class="doctor-card-inner">
-          ${onDuty ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
-          <div class="doctor-photo">${specialistDoctor.photo ? `<img src="${specialistDoctor.photo}" alt="${specialistDoctor.name}">` : doctorIcon()}</div>
-          <p class="doctor-name">${specialistDoctor.name}</p>
-          <p class="doctor-field">${specialistDoctor.field}</p>
-          <div class="doctor-meta">
-            <div class="meta-chip">${stethoIcon()}<span>Bidang: <b>Radiologi</b></span></div>
-            <div class="meta-chip">${clockIcon()}<span>Jadwal: <b>${specialistDoctor.schedule}</b></span></div>
-          </div>
-          <div class="doctor-status-row">
-            <span class="status-pill ${onDuty ? 'status-duty' : 'status-off'}">
-              <span class="dot"></span>${onDuty ? 'Praktik Sekarang' : 'Di Luar Jam Praktik'}
-            </span>
-          </div>
+      <div class="doctor-row ${onDuty ? 'on-duty' : ''}">
+        ${onDuty ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
+        <div class="doctor-photo-sm">${specialistDoctor.photo ? `<img src="${specialistDoctor.photo}" alt="${specialistDoctor.name}">` : doctorIcon()}</div>
+        <div class="doctor-info">
+          <p class="dname">${specialistDoctor.name}</p>
+          <p class="dmeta">${specialistDoctor.field} · <b>${specialistDoctor.schedule}</b></p>
         </div>
+        <span class="status-pill ${onDuty ? 'status-duty' : 'status-off'}">
+          <span class="dot"></span>${onDuty ? 'Praktik' : 'Tutup'}
+        </span>
       </div>
     `;
   }
@@ -707,8 +663,8 @@
       return;
     }
 
-    const cardsWrap = document.createElement('div');
-    cardsWrap.className = 'cards';
+    const listWrap = document.createElement('div');
+    listWrap.className = 'staff-list';
     const nowForPhase = new Date();
     const nowMinutesForPhase = nowForPhase.getHours() * 60 + nowForPhase.getMinutes();
 
@@ -722,44 +678,39 @@
       if (phase === 'libur') {
         statusClass = 'status-off'; statusText = 'Libur';
       } else if (phase === 'belum') {
-        statusClass = 'status-off'; statusText = 'Belum Dinas';
+        statusClass = 'status-off'; statusText = 'Belum';
       } else if (phase === 'sudah') {
-        statusClass = 'status-off'; statusText = 'Sudah Dinas';
+        statusClass = 'status-off'; statusText = 'Selesai';
       } else if (phase === 'aktif') {
         statusClass = isOut ? 'status-out' : 'status-duty';
-        statusText = isOut ? 'Sedang Keluar' : 'Di Tempat';
+        statusText = isOut ? 'Keluar' : 'Di Tempat';
       } else {
         statusClass = 'status-off'; statusText = '-';
       }
 
       const link = waLink(person.phone, person.name);
-      const card = document.createElement('div');
-      card.className = 'card' + (isOnDutyNow ? ' on-duty' : ' dimmed');
-      card.innerHTML = `
+      const row = document.createElement('div');
+      row.className = 'staff-row' + (isOnDutyNow ? ' on-duty' : ' dimmed');
+      row.innerHTML = `
         ${isOnDutyNow ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
-        <span class="shift-tag shift-${shift}">${shiftLabel[shift] || shift}</span>
-        <div class="avatar">${person.photo ? `<img src="${person.photo}" alt="${person.name}">` : personIcon()}</div>
-        <p class="name">${person.name}</p>
-        <p class="role">${person.role}</p>
-        <span class="status-pill ${statusClass}"><span class="dot"></span>${statusText}</span>
-        <div class="contact-row">
-          <div class="qr-box" data-link="${link}" data-name="${person.name}"></div>
-          <div class="contact-info">
-            <small>Pindai untuk WhatsApp</small>
-            <a class="wa-btn" href="${link}" target="_blank" rel="noopener">Hubungi</a>
+        <div class="avatar-sm">${person.photo ? `<img src="${person.photo}" alt="${person.name}">` : personIcon()}</div>
+        <div class="staff-info">
+          <p class="sname">${person.name}</p>
+          <div class="srole-row">
+            <span class="srole">${person.role}</span>
+            <span class="shift-tag shift-${shift}">${shiftLabel[shift] || shift}</span>
+            <span class="status-pill ${statusClass}"><span class="dot"></span>${statusText}</span>
           </div>
         </div>
+        <a class="wa-icon-btn" href="${link}" target="_blank" rel="noopener" aria-label="Hubungi ${person.name}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+        </a>
       `;
-      cardsWrap.appendChild(card);
+      listWrap.appendChild(row);
     });
 
     body.innerHTML = '';
-    body.appendChild(cardsWrap);
-
-    cardsWrap.querySelectorAll('.qr-box').forEach(box => {
-      renderQr(box, box.dataset.link, 56);
-      box.addEventListener('click', () => openQrModal(box.dataset.link, box.dataset.name));
-    });
+    body.appendChild(listWrap);
   }
 
   // ===== Widget permintaan ekspertise rontgen =====
