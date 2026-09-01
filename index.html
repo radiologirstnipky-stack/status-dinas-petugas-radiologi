@@ -2,209 +2,257 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Papan Status Petugas — Instalasi Radiologi & Keperawatan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Informasi Radiologi</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 
   :root{
-    --board:#12211D;
-    --board-panel:#1B3129;
-    --board-line:#2C4A3D;
-    --paper:#F5F1E4;
-    --paper-edge:#E6DFC9;
-    --ink:#22261F;
-    --ink-soft:#5B6156;
-    --pin:#C9A227;
-    --duty:#2F6E4F;
-    --duty-bg:#E4EEE3;
-    --out:#B5651D;
-    --out-bg:#F5E6D5;
-    --off:#8A8578;
-    --off-bg:#EAE7DC;
-    --tag-p:#3B6E67;
-    --tag-s:#B08A2E;
-    --tag-m:#2F4A73;
-    --tag-l:#8A8578;
+    --bg-0:#070E14;
+    --bg-1:#0C1B24;
+    --bg-2:#122733;
+    --line:#1E3745;
+    --line-soft:#16293472;
+
+    --paper:#F4F1E8;
+    --ink:#151A17;
+    --ink-soft:#6A7168;
+
+    --cyan:#4FD8D0;
+    --cyan-dim:#1F4B49;
+    --amber:#F3B23A;
+    --amber-dim:#4A3413;
+    --amber-glow:#FFD873;
+
+    --duty:#3FCB8A;
+    --duty-bg:rgba(63,203,138,0.12);
+    --out:#F0955A;
+    --out-bg:rgba(240,149,90,0.12);
+    --off:#7C8A93;
+    --off-bg:rgba(124,138,147,0.10);
+
+    --radius-lg:20px;
+    --radius-md:14px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
   }
 
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{ scroll-behavior:smooth; }
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.03), transparent 40%),
-      var(--board);
+      radial-gradient(circle at 12% 0%, #12303580, transparent 45%),
+      radial-gradient(circle at 90% 15%, #1a2f2280, transparent 40%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-0));
     min-height:100vh;
     font-family:'Work Sans', sans-serif;
     color:var(--paper);
-    padding:28px 20px 60px;
+    padding-bottom: calc(28px + var(--safe-b));
+    -webkit-font-smoothing:antialiased;
   }
 
-  .board-frame{
-    max-width:1180px;
-    margin:0 auto;
-    background:var(--board-panel);
-    border:1px solid var(--board-line);
-    border-radius:18px;
-    padding:28px 28px 34px;
-    box-shadow: inset 0 0 0 6px rgba(0,0,0,0.12);
+  /* ===== Top bar (sticky, mobile-first) ===== */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    padding: calc(14px + var(--safe-t)) 16px 12px;
+    background: linear-gradient(180deg, rgba(7,14,20,0.96), rgba(7,14,20,0.86) 70%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line-soft);
   }
+  .topbar-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .brand-badge{
+    width:38px; height:38px; flex-shrink:0; border-radius:11px;
+    background: radial-gradient(circle at 35% 30%, #FFE9A6, var(--amber) 55%, #B9791E);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 14px 1px rgba(243,178,58,0.45);
+  }
+  .brand-badge svg{ width:22px; height:22px; }
+  .brand h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem;
+    margin:0; line-height:1.1; letter-spacing:0.1px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .brand p{ margin:1px 0 0; color:#8FB0AC; font-size:0.72rem; }
 
-  header{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:16px;
-    border-bottom:1px solid var(--board-line);
-    padding-bottom:20px;
-    margin-bottom:26px;
-  }
-
-  .masthead h1{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:1.9rem;
-    line-height:1.15;
-    margin:0 0 4px;
-    letter-spacing:0.2px;
-  }
-  .masthead p{
-    margin:0;
-    color:#A9C0B4;
-    font-size:0.9rem;
-  }
-
-  .clock-block{
-    text-align:right;
-  }
+  .clock-block{ text-align:right; flex-shrink:0; }
   .clock{
-    font-family:'Fraunces', serif;
-    font-variant-numeric:tabular-nums;
-    font-size:2rem;
-    font-weight:600;
-    color:#E9DFC2;
+    font-family:'JetBrains Mono', monospace; font-variant-numeric:tabular-nums;
+    font-size:1.15rem; font-weight:500; color:var(--cyan); letter-spacing:0.5px;
   }
-  .date-line{
-    color:#A9C0B4;
-    font-size:0.85rem;
-    margin-top:2px;
-  }
+  .date-line{ color:#7E8F97; font-size:0.68rem; margin-top:1px; }
 
-  .toolbar{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:18px;
+  .quicknav{
+    display:flex; gap:8px; margin-top:12px; overflow-x:auto;
+    scrollbar-width:none; -ms-overflow-style:none;
   }
+  .quicknav::-webkit-scrollbar{ display:none; }
+  .quicknav a{
+    flex-shrink:0; text-decoration:none; color:#BFE3DC;
+    font-size:0.78rem; font-weight:600; padding:8px 14px;
+    border:1px solid var(--line); border-radius:999px;
+    background:rgba(255,255,255,0.03);
+  }
+  .quicknav a:active{ background:rgba(79,216,208,0.14); border-color:var(--cyan-dim); }
+
   .refresh-btn{
-    background:transparent;
-    border:1px solid var(--board-line);
-    color:#CFE0D6;
-    font-size:0.8rem;
-    font-family:'Work Sans', sans-serif;
-    padding:8px 14px;
-    border-radius:999px;
-    cursor:pointer;
-    transition:background 0.15s ease;
+    background:transparent; border:1px solid var(--line); color:#CFE0D6;
+    font-size:0.72rem; font-family:'Work Sans', sans-serif; padding:8px 12px;
+    border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    flex-shrink:0;
   }
-  .refresh-btn:hover{ background:rgba(255,255,255,0.06); }
+  .refresh-btn svg{ width:13px; height:13px; }
+  .refresh-btn:active{ background:rgba(255,255,255,0.08); }
+
+  /* ===== Page container ===== */
+  .wrap{ max-width:640px; margin:0 auto; padding:18px 14px 4px; }
+
+  .section-label{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.72rem; font-weight:700; letter-spacing:0.09em; text-transform:uppercase;
+    color:#8FB0AC; margin:26px 2px 12px;
+    scroll-margin-top:118px;
+  }
+  .section-label .line{ flex:1; height:1px; background:var(--line); }
 
   .notice{
-    background:var(--paper);
-    color:var(--ink);
-    border-radius:14px;
-    padding:26px;
-    text-align:center;
-    font-size:0.95rem;
+    background:var(--paper); color:var(--ink); border-radius:var(--radius-lg);
+    padding:26px 20px; text-align:center; font-size:0.92rem; margin-top:10px;
   }
-  .notice b{ font-family:'Fraunces', serif; font-size:1.1rem; display:block; margin-bottom:6px;}
+  .notice b{ font-family:'Fraunces', serif; font-size:1.05rem; display:block; margin-bottom:6px;}
 
+  /* ===== Radiation trefoil + glow ===== */
+  .trefoil{ display:block; }
+  @keyframes pulse-glow{
+    0%,100%{ filter: drop-shadow(0 0 3px var(--amber-glow)) drop-shadow(0 0 7px rgba(243,178,58,0.55)); }
+    50%{ filter: drop-shadow(0 0 7px var(--amber-glow)) drop-shadow(0 0 16px rgba(243,178,58,0.85)); }
+  }
+  @keyframes ring-pulse{
+    0%{ box-shadow:0 0 0 0 rgba(243,178,58,0.55), 0 0 0 0 rgba(243,178,58,0.0); }
+    70%{ box-shadow:0 0 0 6px rgba(243,178,58,0.0), 0 0 18px 4px rgba(243,178,58,0.0); }
+    100%{ box-shadow:0 0 0 0 rgba(243,178,58,0.0); }
+  }
+  .radiation-badge{
+    position:absolute; top:-11px; right:14px; width:34px; height:34px;
+    border-radius:50%; background:radial-gradient(circle at 35% 30%, #1c1704, #000);
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid #6b4e10;
+    animation: ring-pulse 2.2s ease-out infinite;
+  }
+  .radiation-badge svg{ width:20px; height:20px; color:var(--amber); animation: pulse-glow 2.2s ease-in-out infinite; }
+
+  /* ===== Doctor spotlight card ===== */
+  .doctor-card{
+    position:relative;
+    border-radius:24px;
+    padding:1.5px;
+    background:linear-gradient(135deg, var(--amber), #6b4e10 40%, var(--bg-2) 70%);
+  }
+  .doctor-card-inner{
+    border-radius:22.5px;
+    background:linear-gradient(160deg, #16242C 0%, #0E1B22 100%);
+    padding:22px 20px 20px;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .doctor-card-inner::before{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(circle at 50% -10%, rgba(243,178,58,0.16), transparent 55%);
+    pointer-events:none;
+  }
+  .doctor-photo{
+    width:92px; height:92px; border-radius:50%; margin-bottom:14px;
+    background: radial-gradient(circle at 32% 28%, #2C4C4A, #123028 70%);
+    border:2px solid var(--amber);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 5px rgba(243,178,58,0.10);
+    position:relative; z-index:1;
+  }
+  .doctor-photo img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .doctor-photo svg{ width:44px; height:44px; color:var(--amber-glow); }
+
+  .doctor-name{
+    font-family:'Fraunces', serif; font-weight:700; font-size:1.28rem;
+    margin:0 0 4px; position:relative; z-index:1;
+  }
+  .doctor-field{
+    font-size:0.82rem; color:var(--cyan); font-weight:600;
+    letter-spacing:0.02em; margin-bottom:16px; position:relative; z-index:1;
+  }
+  .doctor-meta{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+    position:relative; z-index:1; width:100%;
+  }
+  .meta-chip{
+    display:flex; align-items:center; gap:7px;
+    background:rgba(255,255,255,0.045); border:1px solid var(--line);
+    border-radius:12px; padding:9px 13px; font-size:0.78rem; color:#D9E7E4;
+    flex:1; min-width:130px; justify-content:center;
+  }
+  .meta-chip svg{ width:15px; height:15px; color:var(--amber); flex-shrink:0; }
+  .meta-chip b{ color:#fff; font-weight:600; }
+
+  .doctor-status-row{
+    margin-top:14px; position:relative; z-index:1;
+  }
+
+  /* ===== Staff cards ===== */
   .cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    gap:20px;
+    display:grid; grid-template-columns:1fr; gap:14px;
+  }
+  @media (min-width:560px){
+    .cards{ grid-template-columns:1fr 1fr; }
   }
 
   .card{
     position:relative;
-    background:var(--paper);
-    border:1px solid var(--paper-edge);
-    border-radius:4px;
-    padding:22px 18px 18px;
-    color:var(--ink);
-    box-shadow: 2px 4px 0 rgba(0,0,0,0.18);
-    transform:rotate(var(--tilt, 0deg));
+    background:linear-gradient(160deg, #182B34 0%, #101E26 100%);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:20px 18px 18px;
+    color:var(--paper);
+    transition: border-color .2s ease;
   }
-  .card:nth-child(odd){ --tilt: -0.6deg; }
-  .card:nth-child(even){ --tilt: 0.5deg; }
-
-  .pin{
-    position:absolute;
-    top:-9px;
-    left:50%;
-    transform:translateX(-50%);
-    width:16px;
-    height:16px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #F0D876, var(--pin));
-    box-shadow:0 2px 3px rgba(0,0,0,0.35);
+  .card.on-duty{
+    border-color:#6b4e10;
+    box-shadow: 0 0 0 1px rgba(243,178,58,0.18) inset, 0 6px 24px -10px rgba(243,178,58,0.35);
   }
-
-  .shift-tag{
-    position:absolute;
-    top:14px;
-    right:14px;
-    font-size:0.68rem;
-    font-weight:700;
-    letter-spacing:0.03em;
-    color:#fff;
-    padding:3px 9px;
-    border-radius:999px;
-  }
-  .shift-P{ background:var(--tag-p); }
-  .shift-S{ background:var(--tag-s); }
-  .shift-M{ background:var(--tag-m); }
-  .shift-L{ background:var(--tag-l); }
 
   .avatar{
-    width:64px;
-    height:64px;
-    border-radius:50%;
-    background:#DCD5BE;
-    border:1px solid var(--paper-edge);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    margin-bottom:12px;
+    width:58px; height:58px; border-radius:50%;
+    background:linear-gradient(160deg, #223A3E, #142228);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; margin-bottom:12px;
   }
   .avatar img{ width:100%; height:100%; object-fit:cover; }
-  .avatar svg{ width:34px; height:34px; color:#8A8368; }
+  .avatar svg{ width:30px; height:30px; color:#5B7A78; }
 
   .name{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:1.05rem;
-    line-height:1.25;
-    margin:0 0 2px;
-    padding-right:56px;
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.02rem;
+    line-height:1.25; margin:0 0 2px; padding-right:44px;
   }
-  .role{
-    font-size:0.78rem;
-    color:var(--ink-soft);
-    margin-bottom:12px;
+  .role{ font-size:0.76rem; color:#8FA6A2; margin-bottom:12px; }
+
+  .shift-tag{
+    position:absolute; top:16px; right:16px;
+    font-size:0.66rem; font-weight:700; letter-spacing:0.03em; color:#0C1B24;
+    padding:3px 9px; border-radius:999px;
   }
+  .shift-P{ background:#7FD9CF; }
+  .shift-S{ background:#F3C765; }
+  .shift-M{ background:#8FA6E0; }
+  .shift-L{ background:#8A8578; color:#F4F1E8; }
 
   .status-pill{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-size:0.78rem;
-    font-weight:600;
-    padding:5px 11px;
-    border-radius:999px;
-    margin-bottom:16px;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:0.76rem; font-weight:600; padding:5px 11px;
+    border-radius:999px; margin-bottom:16px;
   }
   .status-pill .dot{ width:7px; height:7px; border-radius:50%; }
   .status-duty{ background:var(--duty-bg); color:var(--duty); }
@@ -215,112 +263,263 @@
   .status-off .dot{ background:var(--off); }
 
   .contact-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    border-top:1px dashed var(--paper-edge);
-    padding-top:14px;
+    display:flex; align-items:center; gap:12px;
+    border-top:1px dashed var(--line); padding-top:14px;
   }
-
   .qr-box{
-    width:64px;
-    height:64px;
-    background:#fff;
-    border:1px solid var(--paper-edge);
-    border-radius:6px;
-    padding:4px;
-    flex-shrink:0;
-    cursor:pointer;
+    width:56px; height:56px; background:#fff; border-radius:8px;
+    padding:4px; flex-shrink:0; cursor:pointer;
   }
   .qr-box canvas, .qr-box img{ width:100% !important; height:100% !important; }
 
   .contact-info{ flex:1; min-width:0; }
-  .contact-info small{
-    display:block;
-    color:var(--ink-soft);
-    font-size:0.68rem;
-    margin-bottom:3px;
-  }
+  .contact-info small{ display:block; color:#7E9490; font-size:0.66rem; margin-bottom:3px; }
   .wa-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:var(--duty);
-    color:#fff;
-    text-decoration:none;
-    font-size:0.78rem;
-    font-weight:600;
-    padding:6px 11px;
-    border-radius:7px;
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--duty); color:#0C1B24; text-decoration:none;
+    font-size:0.78rem; font-weight:700; padding:8px 12px; border-radius:9px;
+    width:100%; justify-content:center;
   }
-  .wa-btn:hover{ background:#25563c; }
+  .wa-btn:active{ background:#33a874; }
 
   footer{
-    max-width:1180px;
-    margin:16px auto 0;
-    color:#7C9187;
-    font-size:0.75rem;
-    text-align:center;
+    max-width:640px; margin:26px auto 0; color:#5C6E72; font-size:0.72rem;
+    text-align:center; padding:0 18px;
   }
 
-  /* Modal QR besar */
+  /* ===== Widget permintaan ekspertise rontgen ===== */
+  .request-card{
+    background:linear-gradient(160deg, #182B34 0%, #101E26 100%);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:22px 18px 20px;
+  }
+  .request-title{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.08rem;
+    line-height:1.35; margin:0 0 4px; color:var(--paper);
+  }
+  .request-sub{
+    font-size:0.8rem; color:#8FA6A2; margin:0 0 18px;
+  }
+  .field-label{
+    font-size:0.76rem; font-weight:700; color:#BFE3DC;
+    text-transform:uppercase; letter-spacing:0.05em;
+    margin:0 0 8px; display:block;
+  }
+  .field-block{ margin-bottom:16px; }
+  .text-input{
+    width:100%; background:rgba(255,255,255,0.045); border:1px solid var(--line);
+    border-radius:11px; padding:11px 13px; color:#fff; font-family:'Work Sans', sans-serif;
+    font-size:0.92rem; outline:none;
+  }
+  .text-input::placeholder{ color:#5C6E72; }
+  .text-input:focus{ border-color:var(--cyan-dim); box-shadow:0 0 0 3px rgba(79,216,208,0.12); }
+
+  .pill-group{ display:flex; flex-wrap:wrap; gap:8px; }
+  .pill-choice{
+    flex:1; min-width:96px; text-align:center;
+    background:rgba(255,255,255,0.03); border:1px solid var(--line);
+    color:#CFE0D6; font-size:0.84rem; font-weight:600;
+    padding:10px 10px; border-radius:11px; cursor:pointer;
+    transition:all .15s ease; user-select:none;
+  }
+  .pill-choice.active{
+    background:rgba(79,216,208,0.14); border-color:var(--cyan);
+    color:var(--cyan);
+  }
+  .pill-choice:active{ transform:scale(0.98); }
+
+  .custom-input-wrap{ margin-top:10px; display:none; }
+  .custom-input-wrap.show{ display:block; }
+
+  .preview-box{
+    background:rgba(0,0,0,0.22); border:1px dashed var(--line);
+    border-radius:12px; padding:14px 14px; margin:6px 0 16px;
+    font-size:0.85rem; line-height:1.55; color:#D9E7E4;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .preview-box .ph{ color:#5C6E72; font-style:italic; }
+
+  .action-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .btn-copy, .btn-send{
+    flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center;
+    gap:7px; border:none; border-radius:12px; padding:12px 14px;
+    font-family:'Work Sans', sans-serif; font-weight:700; font-size:0.86rem; cursor:pointer;
+  }
+  .btn-copy{ background:rgba(255,255,255,0.07); color:#D9E7E4; border:1px solid var(--line); }
+  .btn-copy:active{ background:rgba(255,255,255,0.13); }
+  .btn-send{ background:var(--duty); color:#0C1B24; }
+  .btn-send:active{ background:#33a874; }
+  .btn-copy svg, .btn-send svg{ width:16px; height:16px; }
+
+  .wa-direct{
+    display:flex; align-items:center; gap:16px; margin-top:22px;
+    padding-top:20px; border-top:1px dashed var(--line);
+  }
+  .wa-direct .qr-box{ width:88px; height:88px; cursor:pointer; }
+  .wa-direct-info{ flex:1; min-width:0; }
+  .wa-direct-info small{ display:block; color:#7E9490; font-size:0.7rem; margin-bottom:4px; }
+  .wa-number{
+    font-family:'JetBrains Mono', monospace; font-size:1.02rem; font-weight:500;
+    color:#fff; letter-spacing:0.3px; margin:0 0 8px;
+  }
+
+  /* ===== Modal QR ===== */
   .modal-overlay{
-    position:fixed; inset:0; background:rgba(10,16,13,0.75);
-    display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+    position:fixed; inset:0; background:rgba(4,8,11,0.82);
+    display:none; align-items:flex-end; justify-content:center; z-index:60;
   }
   .modal-overlay.show{ display:flex; }
   .modal-box{
-    background:var(--paper); color:var(--ink); border-radius:12px;
-    padding:26px; text-align:center; max-width:280px; width:100%;
+    background:var(--paper); color:var(--ink);
+    border-radius:22px 22px 0 0; padding:26px 26px calc(26px + var(--safe-b));
+    text-align:center; max-width:420px; width:100%;
+    animation: sheet-up .22s ease-out;
   }
-  .modal-box .qr-large{ width:200px; height:200px; margin:0 auto 14px; background:#fff; padding:8px; border-radius:8px;}
+  @media (min-width:520px){
+    .modal-overlay{ align-items:center; }
+    .modal-box{ border-radius:18px; }
+  }
+  @keyframes sheet-up{ from{ transform:translateY(24px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+  .modal-box .qr-large{
+    width:200px; height:200px; margin:0 auto 14px; background:#fff;
+    padding:8px; border-radius:12px;
+  }
   .modal-box .qr-large canvas, .modal-box .qr-large img{ width:100% !important; height:100% !important; }
   .modal-close{
-    margin-top:14px; background:transparent; border:1px solid var(--paper-edge);
-    padding:7px 16px; border-radius:999px; cursor:pointer; font-family:'Work Sans', sans-serif;
-  }
-
-  @media (max-width:520px){
-    .clock{ font-size:1.5rem; }
-    header{ align-items:flex-start; }
+    margin-top:6px; background:var(--ink); color:var(--paper); border:none;
+    padding:12px 20px; border-radius:12px; cursor:pointer;
+    font-family:'Work Sans', sans-serif; font-weight:600; width:100%;
   }
 </style>
 </head>
 <body>
 
-  <div class="board-frame">
-    <header>
-      <div class="masthead">
-        <h1>Papan Status Petugas</h1>
-        <p>Instalasi Radiologi &amp; Keperawatan</p>
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <div class="brand-badge">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="2.4" fill="#3A2506"/>
+            <path d="M12 12 L12 4.2 A7.8 7.8 0 0 1 18.75 8.1 Z" fill="#3A2506"/>
+            <path d="M12 12 L5.25 15.9 A7.8 7.8 0 0 1 5.25 8.1 Z" fill="#3A2506"/>
+            <path d="M12 12 L18.75 15.9 A7.8 7.8 0 0 1 12 19.8 A7.8 7.8 0 0 1 5.25 15.9 Z" fill="#3A2506"/>
+          </svg>
+        </div>
+        <div style="min-width:0;">
+          <h1>Informasi Radiologi</h1>
+          <p>Instalasi Radiologi &amp; Keperawatan</p>
+        </div>
       </div>
       <div class="clock-block">
         <div class="clock" id="clock">--:--</div>
         <div class="date-line" id="date-line">-</div>
       </div>
-    </header>
-
-    <div class="toolbar">
-      <button class="refresh-btn" onclick="renderBoard()">↻ Muat ulang</button>
     </div>
 
+    <div class="quicknav">
+      <a href="#dokter">👨‍⚕️ Dokter Spesialis</a>
+      <a href="#petugas">🧑‍⚕️ Petugas Jaga</a>
+      <a href="#rontgen-request">🩻 Minta Ekspertise</a>
+      <button class="refresh-btn" onclick="renderBoard()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2M18 4v4h-4M6 20v-4h4"/></svg>
+        Muat ulang
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="section-label" id="dokter"><span>Dokter Spesialis</span><span class="line"></span></div>
+    <div id="doctor-slot"></div>
+
+    <div class="section-label" id="petugas"><span>Petugas Jaga Hari Ini</span><span class="line"></span></div>
     <div id="board-body"></div>
+
+    <div class="section-label" id="rontgen-request"><span>Permintaan Ekspertise</span><span class="line"></span></div>
+    <div class="request-card">
+      <p class="request-title">Untuk meminta expertise rontgen panoramic dan rontgen, mohon hubungi wa di bawah</p>
+      <p class="request-sub">Isi form berikut, lalu salin teksnya atau kirim langsung ke WhatsApp.</p>
+
+      <div class="field-block">
+        <label class="field-label" for="rq-nama">Nama</label>
+        <input class="text-input" id="rq-nama" type="text" placeholder="Nama lengkap pasien" oninput="updateRequestPreview()">
+      </div>
+
+      <div class="field-block">
+        <label class="field-label">Jenis Bayar</label>
+        <div class="pill-group" id="rq-bayar-group">
+          <div class="pill-choice" data-value="BPJS">BPJS</div>
+          <div class="pill-choice" data-value="Umum">Umum</div>
+          <div class="pill-choice" data-value="__custom">Isi sendiri</div>
+        </div>
+        <div class="custom-input-wrap" id="rq-bayar-custom-wrap">
+          <input class="text-input" id="rq-bayar-custom" type="text" placeholder="Tulis jenis pembayaran" oninput="updateRequestPreview()">
+        </div>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label">Jenis Tindakan</label>
+        <div class="pill-group" id="rq-tindakan-group">
+          <div class="pill-choice" data-value="Rontgen">Rontgen</div>
+          <div class="pill-choice" data-value="Panoramic">Panoramic</div>
+          <div class="pill-choice" data-value="__custom">Isi sendiri</div>
+        </div>
+        <div class="custom-input-wrap" id="rq-tindakan-custom-wrap">
+          <input class="text-input" id="rq-tindakan-custom" type="text" placeholder="Tulis jenis tindakan" oninput="updateRequestPreview()">
+        </div>
+      </div>
+
+      <label class="field-label">Pratinjau Pesan</label>
+      <div class="preview-box" id="rq-preview"></div>
+
+      <div class="action-row">
+        <button class="btn-copy" id="rq-copy-btn" onclick="copyRequestText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          Salin Teks
+        </button>
+        <button class="btn-send" onclick="sendRequestToWhatsapp()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+          Kirim ke WhatsApp
+        </button>
+      </div>
+
+      <div class="wa-direct">
+        <div class="qr-box" id="rq-wa-qr" data-link="https://wa.me/6289672687255"></div>
+        <div class="wa-direct-info">
+          <small>Atau pindai / hubungi langsung</small>
+          <p class="wa-number">+62 896-7268-7255</p>
+          <a class="wa-btn" href="https://wa.me/6289672687255" target="_blank" rel="noopener">Buka WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <footer>
-    Data jadwal &amp; status diambil dari perangkat/browser yang sama dengan halaman Generator Jadwal Dinas.
+    Data jadwal &amp; status diambil dari perangkat/browser yang sama dengan halaman Generator Jadwal Dinas.<br>
+    Lencana radiasi berpendar menandakan petugas yang sedang bertugas hari ini.
   </footer>
 
   <!-- Modal QR -->
   <div class="modal-overlay" id="qr-modal">
     <div class="modal-box">
       <div id="qr-large-target" class="qr-large"></div>
-      <div id="qr-modal-name" style="font-family:'Fraunces',serif; font-weight:600;"></div>
+      <div id="qr-modal-name" style="font-family:'Fraunces',serif; font-weight:600; margin-bottom:14px;"></div>
       <button class="modal-close" onclick="closeQrModal()">Tutup</button>
     </div>
   </div>
 
 <script>
+  // ===== Data dokter spesialis (statis) =====
+  // Untuk mengganti foto placeholder: isi "photo" dengan link gambar langsung
+  const specialistDoctor = {
+    name: "dr. Tharina Lawei, Sp. Rad",
+    field: "Spesialis Radiologi",
+    schedule: "12.00 – 15.00",
+    photo: ""
+  };
+
   // ===== Data kontak petugas =====
   // Untuk mengganti foto placeholder: isi value "photo" dengan link gambar langsung
   // (mis. dari Google Drive: https://drive.google.com/uc?export=view&id=FILE_ID)
@@ -341,6 +540,28 @@
 
   function personIcon(){
     return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>`;
+  }
+  function doctorIcon(){
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3v3a3 3 0 0 0 6 0V3"/>
+      <path d="M9 3H7a2 2 0 0 0-2 2v3a5 5 0 0 0 10 0V5a2 2 0 0 0-2-2h-2"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <circle cx="19" cy="8" r="2.2"/>
+    </svg>`;
+  }
+  function radiationIcon(){
+    return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="2.3" fill="currentColor"/>
+      <path d="M12 12 L12 3.5 A8.5 8.5 0 0 1 19.36 8.25 Z" fill="currentColor"/>
+      <path d="M12 12 L4.64 16.25 A8.5 8.5 0 0 1 4.64 7.75 Z" fill="currentColor"/>
+      <path d="M12 12 L19.36 16.25 A8.5 8.5 0 0 1 12 20.5 A8.5 8.5 0 0 1 4.64 16.25 Z" fill="currentColor"/>
+    </svg>`;
+  }
+  function clockIcon(){
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>`;
+  }
+  function stethoIcon(){
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v6a5 5 0 0 0 10 0V4"/><path d="M19 10v2a7 7 0 0 1-14 0"/><circle cx="19" cy="8" r="2"/></svg>`;
   }
 
   // ===== Konfigurasi Backend (Google Apps Script Web App) =====
@@ -409,8 +630,42 @@
     if (e.target.id === 'qr-modal') closeQrModal();
   });
 
+  // Apakah jadwal dokter sedang berlangsung sekarang (12.00–15.00)?
+  function isDoctorOnDutyNow() {
+    const now = new Date();
+    const minutes = now.getHours() * 60 + now.getMinutes();
+    return minutes >= (12 * 60) && minutes < (15 * 60);
+  }
+
+  function renderDoctor() {
+    const slot = document.getElementById('doctor-slot');
+    const onDuty = isDoctorOnDutyNow();
+    slot.innerHTML = `
+      <div class="doctor-card">
+        <div class="doctor-card-inner">
+          ${onDuty ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
+          <div class="doctor-photo">${specialistDoctor.photo ? `<img src="${specialistDoctor.photo}" alt="${specialistDoctor.name}">` : doctorIcon()}</div>
+          <p class="doctor-name">${specialistDoctor.name}</p>
+          <p class="doctor-field">${specialistDoctor.field}</p>
+          <div class="doctor-meta">
+            <div class="meta-chip">${stethoIcon()}<span>Bidang: <b>Radiologi</b></span></div>
+            <div class="meta-chip">${clockIcon()}<span>Jadwal: <b>${specialistDoctor.schedule}</b></span></div>
+          </div>
+          <div class="doctor-status-row">
+            <span class="status-pill ${onDuty ? 'status-duty' : 'status-off'}">
+              <span class="dot"></span>${onDuty ? 'Praktik Sekarang' : 'Di Luar Jam Praktik'}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   async function renderBoard() {
+    renderDoctor();
     await fetchRemoteData();
+    renderDoctor();
+
     const body = document.getElementById('board-body');
     const schedule = getScheduleToday();
     const statusData = getStatusData();
@@ -430,6 +685,7 @@
     staffDirectory.forEach(person => {
       const shift = schedule.shiftsByName[person.name] || '-';
       const isLibur = shift === 'L';
+      const isOnDutyToday = !isLibur; // bertugas hari ini = tidak libur
       const isOut = !!(statusData[person.name] && statusData[person.name].keluar);
 
       let statusClass = 'status-off', statusText = 'Libur';
@@ -440,9 +696,9 @@
 
       const link = waLink(person.phone, person.name);
       const card = document.createElement('div');
-      card.className = 'card';
+      card.className = 'card' + (isOnDutyToday ? ' on-duty' : '');
       card.innerHTML = `
-        <span class="pin"></span>
+        ${isOnDutyToday ? `<div class="radiation-badge">${radiationIcon()}</div>` : ''}
         <span class="shift-tag shift-${shift}">${shiftLabel[shift] || shift}</span>
         <div class="avatar">${person.photo ? `<img src="${person.photo}" alt="${person.name}">` : personIcon()}</div>
         <p class="name">${person.name}</p>
@@ -468,6 +724,80 @@
     });
   }
 
+  // ===== Widget permintaan ekspertise rontgen =====
+  const RONTGEN_WA_NUMBER = "6289672687255";
+
+  const rqState = { bayar: null, tindakan: null };
+
+  function setupPillGroup(groupId, customWrapId, stateKey) {
+    const group = document.getElementById(groupId);
+    const customWrap = document.getElementById(customWrapId);
+    group.querySelectorAll('.pill-choice').forEach(pill => {
+      pill.addEventListener('click', () => {
+        group.querySelectorAll('.pill-choice').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        rqState[stateKey] = pill.dataset.value;
+        customWrap.classList.toggle('show', pill.dataset.value === '__custom');
+        updateRequestPreview();
+      });
+    });
+  }
+
+  function getFieldValue(stateKey, customInputId) {
+    if (!rqState[stateKey]) return '';
+    if (rqState[stateKey] === '__custom') {
+      return document.getElementById(customInputId).value.trim();
+    }
+    return rqState[stateKey];
+  }
+
+  function buildRequestMessage() {
+    const nama = document.getElementById('rq-nama').value.trim();
+    const bayar = getFieldValue('bayar', 'rq-bayar-custom');
+    const tindakan = getFieldValue('tindakan', 'rq-tindakan-custom');
+
+    return `Halo, saya ingin meminta expertise rontgen.\n\n`
+      + `Nama: ${nama || '-'}\n`
+      + `Jenis Tindakan: ${tindakan || '-'}\n`
+      + `Jenis Bayar: ${bayar || '-'}\n\n`
+      + `Mohon informasi lebih lanjut. Terima kasih.`;
+  }
+
+  function updateRequestPreview() {
+    const msg = buildRequestMessage();
+    document.getElementById('rq-preview').textContent = msg;
+  }
+
+  async function copyRequestText() {
+    const msg = buildRequestMessage();
+    const btn = document.getElementById('rq-copy-btn');
+    const original = btn.innerHTML;
+    try {
+      await navigator.clipboard.writeText(msg);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = msg; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+    btn.innerHTML = '✓ Tersalin';
+    setTimeout(() => { btn.innerHTML = original; }, 1600);
+  }
+
+  function sendRequestToWhatsapp() {
+    const msg = buildRequestMessage();
+    window.open(`https://wa.me/${RONTGEN_WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  function initRequestWidget() {
+    setupPillGroup('rq-bayar-group', 'rq-bayar-custom-wrap', 'bayar');
+    setupPillGroup('rq-tindakan-group', 'rq-tindakan-custom-wrap', 'tindakan');
+    updateRequestPreview();
+    const qrBox = document.getElementById('rq-wa-qr');
+    renderQr(qrBox, qrBox.dataset.link, 80);
+    qrBox.addEventListener('click', () => openQrModal(qrBox.dataset.link, 'WhatsApp Ekspertise Rontgen'));
+  }
+
   function tickClock() {
     const now = new Date();
     document.getElementById('clock').textContent =
@@ -482,9 +812,10 @@
   });
 
   setInterval(tickClock, 1000);
-  setInterval(renderBoard, 8000); // sinkron antar-perangkat lewat server tiap 8 detik
+  setInterval(renderBoard, 8000); // sinkron antar-perangkat lewat server tiap 8 detik & cek jam praktik dokter
   tickClock();
   renderBoard();
+  initRequestWidget();
 </script>
 </body>
 </html>
