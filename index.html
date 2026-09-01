@@ -503,7 +503,7 @@
 
   <footer>
     Data jadwal &amp; status diambil dari perangkat/browser yang sama dengan halaman Generator Jadwal Dinas.<br>
-    Lencana radiasi berpendar menandakan petugas yang sedang berada dalam jam dinasnya saat ini; petugas lain ditampilkan abu-abu.
+    Lencana radiasi berpendar menandakan petugas yang sedang berada dalam jam dinasnya saat ini; petugas yang belum atau sudah lewat jam dinasnya ditampilkan abu-abu dengan status "Belum Dinas" / "Sudah Dinas".
   </footer>
 
   <!-- Modal QR -->
@@ -650,18 +650,20 @@
     M: { start: 21 * 60, end: 7 * 60 }         // Malam 21.00–07.00 (lewat tengah malam)
   };
 
-  function getCurrentShiftCode() {
-    const now = new Date();
-    const minutes = now.getHours() * 60 + now.getMinutes();
-    for (const [code, range] of Object.entries(SHIFT_RANGES)) {
-      if (range.start <= range.end) {
-        if (minutes >= range.start && minutes < range.end) return code;
-      } else {
-        // rentang yang melewati tengah malam (Malam)
-        if (minutes >= range.start || minutes < range.end) return code;
-      }
+  // Menentukan fase dinas seseorang berdasarkan kode shift & jam saat ini:
+  // 'libur' | 'belum' (belum waktunya) | 'aktif' (sedang dalam jam dinas) | 'sudah' (sudah lewat jam dinas)
+  function getDutyPhase(shiftCode, nowMinutes) {
+    if (!shiftCode || shiftCode === 'L' || shiftCode === '-') return 'libur';
+    const range = SHIFT_RANGES[shiftCode];
+    if (!range) return 'unknown';
+    if (range.start <= range.end) {
+      if (nowMinutes < range.start) return 'belum';
+      if (nowMinutes < range.end) return 'aktif';
+      return 'sudah';
     }
-    return null;
+    // rentang yang melewati tengah malam (Malam)
+    if (nowMinutes >= range.start || nowMinutes < range.end) return 'aktif';
+    return 'belum';
   }
 
   function renderDoctor() {
@@ -708,22 +710,27 @@
 
     const cardsWrap = document.createElement('div');
     cardsWrap.className = 'cards';
-    const currentShift = getCurrentShiftCode();
+    const nowForPhase = new Date();
+    const nowMinutesForPhase = nowForPhase.getHours() * 60 + nowForPhase.getMinutes();
 
     staffDirectory.forEach(person => {
       const shift = schedule.shiftsByName[person.name] || '-';
-      const isLibur = shift === 'L';
-      const isOnDutyNow = !isLibur && shift === currentShift; // sedang dalam jam dinasnya sekarang
+      const phase = getDutyPhase(shift, nowMinutesForPhase); // 'libur' | 'belum' | 'aktif' | 'sudah' | 'unknown'
+      const isOnDutyNow = phase === 'aktif'; // sedang dalam jam dinasnya sekarang
       const isOut = !!(statusData[person.name] && statusData[person.name].keluar);
 
       let statusClass = 'status-off', statusText = 'Libur';
-      if (isLibur) {
+      if (phase === 'libur') {
         statusClass = 'status-off'; statusText = 'Libur';
-      } else if (!isOnDutyNow) {
-        statusClass = 'status-off'; statusText = 'Belum Waktu Dinas';
-      } else {
+      } else if (phase === 'belum') {
+        statusClass = 'status-off'; statusText = 'Belum Dinas';
+      } else if (phase === 'sudah') {
+        statusClass = 'status-off'; statusText = 'Sudah Dinas';
+      } else if (phase === 'aktif') {
         statusClass = isOut ? 'status-out' : 'status-duty';
         statusText = isOut ? 'Sedang Keluar' : 'Di Tempat';
+      } else {
+        statusClass = 'status-off'; statusText = '-';
       }
 
       const link = waLink(person.phone, person.name);
