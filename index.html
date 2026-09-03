@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>Informasi Radiologi</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 
@@ -87,36 +86,27 @@
   }
   .date-line{ color:#7E8F97; font-size:0.68rem; margin-top:1px; }
 
-  .quicknav{
-    display:flex; gap:8px; margin-top:12px; overflow-x:auto;
-    scrollbar-width:none; -ms-overflow-style:none;
-  }
-  .quicknav::-webkit-scrollbar{ display:none; }
-  .quicknav a{
-    flex-shrink:0; text-decoration:none; color:#BFE3DC;
-    font-size:0.78rem; font-weight:600; padding:8px 14px;
-    border:1px solid var(--line); border-radius:999px;
-    background:rgba(255,255,255,0.03);
-  }
-  .quicknav a:active{ background:rgba(79,216,208,0.14); border-color:var(--cyan-dim); }
+  .topbar-actions{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
 
   .refresh-btn{
-    background:transparent; border:1px solid var(--line); color:#CFE0D6;
-    font-size:0.72rem; font-family:'Work Sans', sans-serif; padding:8px 12px;
-    border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--line); color:#CFE0D6;
+    width:38px; height:38px; border-radius:50%; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
     flex-shrink:0;
   }
-  .refresh-btn svg{ width:13px; height:13px; }
-  .refresh-btn:active{ background:rgba(255,255,255,0.08); }
+  .refresh-btn svg{ width:17px; height:17px; }
+  .refresh-btn:active{ background:rgba(255,255,255,0.1); transform:scale(0.94); }
+  .refresh-btn.spinning svg{ animation: spin .6s linear; }
+  @keyframes spin{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
 
   /* ===== Page container ===== */
-  .wrap{ max-width:640px; margin:0 auto; padding:18px 14px 4px; }
+  .wrap{ max-width:640px; margin:0 auto; padding:20px 16px 4px; }
 
   .section-label{
     display:flex; align-items:center; gap:8px;
-    font-size:0.72rem; font-weight:700; letter-spacing:0.09em; text-transform:uppercase;
-    color:#8FB0AC; margin:26px 2px 12px;
-    scroll-margin-top:118px;
+    font-size:0.76rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:#8FB0AC; margin:34px 2px 14px;
+    scroll-margin-top:78px;
   }
   .section-label .line{ flex:1; height:1px; background:var(--line); }
 
@@ -149,47 +139,47 @@
   /* ===== Doctor compact row ===== */
   .doctor-row{
     position:relative;
-    display:flex; align-items:center; gap:12px;
+    display:flex; align-items:center; gap:18px;
     background:linear-gradient(160deg, #16242C 0%, #0E1B22 100%);
-    border:1px solid var(--line); border-radius:16px;
-    padding:14px 16px;
+    border:1px solid var(--line); border-radius:20px;
+    padding:22px 22px;
   }
   .doctor-row.on-duty{
     border-color:#6b4e10;
     box-shadow: 0 0 0 1px rgba(243,178,58,0.16) inset;
   }
   .doctor-photo-sm{
-    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    width:72px; height:72px; border-radius:50%; flex-shrink:0;
     background: radial-gradient(circle at 32% 28%, #2C4C4A, #123028 70%);
-    border:2px solid var(--amber);
+    border:3px solid var(--amber);
     display:flex; align-items:center; justify-content:center;
     overflow:hidden;
   }
   .doctor-photo-sm img{ width:100%; height:100%; object-fit:cover; }
-  .doctor-photo-sm svg{ width:24px; height:24px; color:var(--amber-glow); }
+  .doctor-photo-sm svg{ width:36px; height:36px; color:var(--amber-glow); }
   .doctor-info{ flex:1; min-width:0; }
   .doctor-info .dname{
-    font-family:'Fraunces', serif; font-weight:600; font-size:0.98rem; margin:0;
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.3rem; margin:0;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .doctor-info .dmeta{
-    font-size:0.74rem; color:#9DB3AF; margin:2px 0 0;
+    font-size:0.92rem; color:#9DB3AF; margin:5px 0 0;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .doctor-info .dmeta b{ color:var(--cyan); font-weight:600; }
-  .doctor-row .status-pill{ flex-shrink:0; margin:0; }
+  .doctor-row .status-pill{ flex-shrink:0; margin:0; font-size:0.82rem; padding:6px 12px; }
 
   /* ===== Staff compact list ===== */
   .staff-list{
-    display:flex; flex-direction:column; gap:8px;
+    display:flex; flex-direction:column; gap:12px;
   }
   .staff-row{
     position:relative;
-    display:flex; align-items:center; gap:11px;
+    display:flex; align-items:center; gap:16px;
     background:linear-gradient(160deg, #182B34 0%, #101E26 100%);
     border:1px solid var(--line);
-    border-radius:14px;
-    padding:10px 12px;
+    border-radius:18px;
+    padding:16px 18px;
   }
   .staff-row.on-duty{
     border-color:#6b4e10;
@@ -198,29 +188,29 @@
   .staff-row.dimmed{ opacity:0.55; }
 
   .avatar-sm{
-    width:40px; height:40px; border-radius:50%; flex-shrink:0;
+    width:58px; height:58px; border-radius:50%; flex-shrink:0;
     background:linear-gradient(160deg, #223A3E, #142228);
     border:1px solid var(--line);
     display:flex; align-items:center; justify-content:center;
     overflow:hidden;
   }
   .avatar-sm img{ width:100%; height:100%; object-fit:cover; }
-  .avatar-sm svg{ width:20px; height:20px; color:#5B7A78; }
+  .avatar-sm svg{ width:28px; height:28px; color:#5B7A78; }
 
   .staff-info{ flex:1; min-width:0; }
   .staff-info .sname{
-    font-family:'Fraunces', serif; font-weight:600; font-size:0.88rem; margin:0;
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.08rem; margin:0;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .staff-info .srole-row{
-    display:flex; align-items:center; gap:6px; margin-top:3px; flex-wrap:wrap;
+    display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap;
   }
-  .staff-info .srole{ font-size:0.7rem; color:#8FA6A2; }
+  .staff-info .srole{ font-size:0.84rem; color:#8FA6A2; }
 
   .shift-tag{
     flex-shrink:0;
-    font-size:0.62rem; font-weight:700; letter-spacing:0.03em; color:#0C1B24;
-    padding:3px 8px; border-radius:999px;
+    font-size:0.74rem; font-weight:700; letter-spacing:0.03em; color:#0C1B24;
+    padding:4px 10px; border-radius:999px;
   }
   .shift-P{ background:#7FD9CF; }
   .shift-S{ background:#F3C765; }
@@ -228,11 +218,11 @@
   .shift-L{ background:#8A8578; color:#F4F1E8; }
 
   .status-pill{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size:0.7rem; font-weight:600; padding:4px 9px;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:0.82rem; font-weight:600; padding:5px 11px;
     border-radius:999px; flex-shrink:0;
   }
-  .status-pill .dot{ width:6px; height:6px; border-radius:50%; }
+  .status-pill .dot{ width:7px; height:7px; border-radius:50%; }
   .status-duty{ background:var(--duty-bg); color:var(--duty); }
   .status-duty .dot{ background:var(--duty); }
   .status-out{ background:var(--out-bg); color:var(--out); }
@@ -241,12 +231,12 @@
   .status-off .dot{ background:var(--off); }
 
   .wa-icon-btn{
-    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    flex-shrink:0; width:42px; height:42px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background:var(--duty); color:#0C1B24; text-decoration:none;
   }
   .wa-icon-btn:active{ background:#33a874; }
-  .wa-icon-btn svg{ width:17px; height:17px; }
+  .wa-icon-btn svg{ width:20px; height:20px; }
 
   footer{
     max-width:640px; margin:26px auto 0; color:#5C6E72; font-size:0.72rem;
@@ -322,8 +312,6 @@
     display:flex; align-items:center; gap:16px; margin-top:22px;
     padding-top:20px; border-top:1px dashed var(--line);
   }
-  .wa-direct .qr-box{ width:88px; height:88px; cursor:pointer; background:#fff; border-radius:8px; padding:4px; flex-shrink:0; }
-  .wa-direct .qr-box canvas, .wa-direct .qr-box img{ width:100% !important; height:100% !important; }
   .wa-direct-info{ flex:1; min-width:0; }
   .wa-direct-info small{ display:block; color:#7E9490; font-size:0.7rem; margin-bottom:4px; }
   .wa-number{
@@ -337,33 +325,7 @@
   }
   .wa-btn:active{ background:#33a874; }
 
-  /* ===== Modal QR ===== */
-  .modal-overlay{
-    position:fixed; inset:0; background:rgba(4,8,11,0.82);
-    display:none; align-items:flex-end; justify-content:center; z-index:60;
-  }
-  .modal-overlay.show{ display:flex; }
-  .modal-box{
-    background:var(--paper); color:var(--ink);
-    border-radius:22px 22px 0 0; padding:26px 26px calc(26px + var(--safe-b));
-    text-align:center; max-width:420px; width:100%;
-    animation: sheet-up .22s ease-out;
-  }
-  @media (min-width:520px){
-    .modal-overlay{ align-items:center; }
-    .modal-box{ border-radius:18px; }
-  }
-  @keyframes sheet-up{ from{ transform:translateY(24px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
-  .modal-box .qr-large{
-    width:200px; height:200px; margin:0 auto 14px; background:#fff;
-    padding:8px; border-radius:12px;
-  }
-  .modal-box .qr-large canvas, .modal-box .qr-large img{ width:100% !important; height:100% !important; }
-  .modal-close{
-    margin-top:6px; background:var(--ink); color:var(--paper); border:none;
-    padding:12px 20px; border-radius:12px; cursor:pointer;
-    font-family:'Work Sans', sans-serif; font-weight:600; width:100%;
-  }
+
 </style>
 </head>
 <body>
@@ -384,20 +346,15 @@
           <p>Instalasi Radiologi</p>
         </div>
       </div>
-      <div class="clock-block">
-        <div class="clock" id="clock">--:--</div>
-        <div class="date-line" id="date-line">-</div>
+      <div class="topbar-actions">
+        <div class="clock-block">
+          <div class="clock" id="clock">--:--</div>
+          <div class="date-line" id="date-line">-</div>
+        </div>
+        <button class="refresh-btn" id="refresh-btn" onclick="renderBoard()" aria-label="Muat ulang data">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2M18 4v4h-4M6 20v-4h4"/></svg>
+        </button>
       </div>
-    </div>
-
-    <div class="quicknav">
-      <a href="#rontgen-request">🩻 Minta Ekspertise</a>
-      <a href="#dokter">👨‍⚕️ Dokter Spesialis</a>
-      <a href="#petugas">🧑‍⚕️ Petugas Jaga</a>
-      <button class="refresh-btn" onclick="renderBoard()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2M18 4v4h-4M6 20v-4h4"/></svg>
-        Muat ulang
-      </button>
     </div>
   </div>
 
@@ -448,7 +405,6 @@
       </div>
 
       <div class="wa-direct">
-        <div class="qr-box" id="rq-wa-qr" data-link="https://wa.me/6289672687255"></div>
         <div class="wa-direct-info">
           <small>whatsapp Instalasi Radiologi RST AD Palangka Raya</small>
           <p class="wa-number">+62 896-7268-7255</p>
@@ -468,15 +424,6 @@
   <footer>
     website ini dibuat bertujuan untuk mempermudah pasien dalam meminta expertise radiologi
   </footer>
-
-  <!-- Modal QR -->
-  <div class="modal-overlay" id="qr-modal">
-    <div class="modal-box">
-      <div id="qr-large-target" class="qr-large"></div>
-      <div id="qr-modal-name" style="font-family:'Fraunces',serif; font-weight:600; margin-bottom:14px;"></div>
-      <button class="modal-close" onclick="closeQrModal()">Tutup</button>
-    </div>
-  </div>
 
 <script>
   // ===== Data dokter spesialis (statis) =====
@@ -571,27 +518,6 @@
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   }
 
-  function renderQr(targetEl, link, size) {
-    targetEl.innerHTML = '';
-    if (window.QRCode) {
-      new QRCode(targetEl, { text: link, width: size, height: size, correctLevel: QRCode.CorrectLevel.M });
-    } else {
-      targetEl.innerHTML = `<a href="${link}" style="font-size:10px;color:#22261F;">Buka WhatsApp</a>`;
-    }
-  }
-
-  function openQrModal(link, name) {
-    document.getElementById('qr-modal-name').textContent = name;
-    renderQr(document.getElementById('qr-large-target'), link, 200);
-    document.getElementById('qr-modal').classList.add('show');
-  }
-  function closeQrModal() {
-    document.getElementById('qr-modal').classList.remove('show');
-  }
-  document.getElementById('qr-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'qr-modal') closeQrModal();
-  });
-
   // Apakah jadwal dokter sedang berlangsung sekarang (12.00–15.00)?
   function isDoctorOnDutyNow() {
     const now = new Date();
@@ -642,9 +568,12 @@
   }
 
   async function renderBoard() {
+    const btn = document.getElementById('refresh-btn');
+    if (btn) btn.classList.add('spinning');
     renderDoctor();
     await fetchRemoteData();
     renderDoctor();
+    if (btn) setTimeout(() => btn.classList.remove('spinning'), 500);
 
     const body = document.getElementById('board-body');
     const schedule = getScheduleToday();
@@ -762,9 +691,6 @@
     setupPillGroup('rq-bayar-group', 'rq-bayar-custom-wrap', 'bayar');
     setupPillGroup('rq-tindakan-group', 'rq-tindakan-custom-wrap', 'tindakan');
     updateRequestPreview();
-    const qrBox = document.getElementById('rq-wa-qr');
-    renderQr(qrBox, qrBox.dataset.link, 80);
-    qrBox.addEventListener('click', () => openQrModal(qrBox.dataset.link, 'WhatsApp Ekspertise Rontgen'));
   }
 
   function tickClock() {
